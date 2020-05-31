@@ -1,0 +1,45 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Bilemo Api Documentation
+            description: This API provides a catalog of mobiles for our clients, and the possibility to manage their users.
+            version: 1.0.0
+        # securityDefinitions:
+        #     Bearer:
+        #         type: apiKey
+        #         description: 'Value: Bearer {jwt} | (Authenticate to get a token)'
+        #         name:  Authorization
+        #         in: header
+        tags:
+            # - name: Authentication
+            #   description: Authenticate to get a token
+            - name: Product
+              description: Get details and list of mobile for clients, manage the mobile catalog for Bilemo
+            - name: Client
+              description: Get details about their own account and manage it for client, manage clients account for Bilemo
+            - name: User
+              description: Get details and list of user for clients, manage their own, manage all users for Bilemo
+        paths:
+            /doc.json:
+                get:
+                    tags:
+                        - "Documentation"
+                    summary: Bilemo Api Documentation formated in JSON
+                    produces:
+                        - application/json
+                    responses:
+                        '200':
+                            description: OK
+            /doc:
+                get:
+                    tags:
+                        - "Documentation"
+                    summary: Bilemo Api Documentation
+                    produces:
+                        - text/html
+                    responses:
+                        '200':
+                            description: OK
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
