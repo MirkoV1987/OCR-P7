@@ -34,10 +34,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *              groups={"users_detail"})
  * )
  * 
- *  * @Hateoas\Relation(
- *     "client",
- *     embedded = @Hateoas\Embedded("expr(object.getClient())"),
- * )
  * 
  * 
  * 
