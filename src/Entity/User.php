@@ -4,7 +4,12 @@ namespace App\Entity;
 
 use App\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -15,32 +20,59 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * 
  * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository") 
+ * 
+ * @ExclusionPolicy("all")
+ * 
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "client_users_details",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true,
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(
+ *              groups={"users_detail"})
+ * )
+ * 
+ *  * @Hateoas\Relation(
+ *     "client",
+ *     embedded = @Hateoas\Embedded("expr(object.getClient())"),
+ * )
+ * 
+ * 
+ * 
  */
 class User implements UserInterface
 {
-    //const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    //const ROLE_USER = 'ROLE_USER';
     /**
      * @var int
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"users_detail"})
+     * @Expose
      *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=80)
+     * @Groups({"users_detail"})
+     * @Expose
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
+     * @Groups({"users_detail"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"users_detail"})
      */
     private $phone;
 
@@ -64,6 +96,7 @@ class User implements UserInterface
      * @Assert\Date
      * @var string A "Y-m-d H:i:s" formatted value
      * @ORM\Column(type="datetime", nullable = true)
+     * @Expose
      */
     private $dateAdd;
 
