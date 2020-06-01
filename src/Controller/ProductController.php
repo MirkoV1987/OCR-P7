@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Product;
 use Swagger\Annotations as SWG;
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Annotation\Groups;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +27,7 @@ class ProductController extends AbstractController
     /**
      * Get details about a specific Product
      * @Route("products/{id}", name="show", methods={"GET"})
+     * @Groups({"details"})
      * @SWG\Parameter(
      *   name="id",
      *   description="Id of the product to get",
@@ -55,14 +58,14 @@ class ProductController extends AbstractController
      */
     public function show(Product $product, SerializerInterface $serializer) : JsonResponse
     {
-        $product = $this->getDoctrine()->getRepository(Product::class)->findOneById(1);
-        $data = $serializer->serialize($product, 'json');
+        $data = $serializer->serialize($product, 'json', SerializationContext::create()->setGroups(array('details')));
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     /**
      * Get products list
      * @Route("products", name="list", methods={"GET"})
+     * @Groups({"list"})
      * @SWG\Parameter(
      *   name="name",
      *   description="The mobile name to search",
@@ -89,15 +92,10 @@ class ProductController extends AbstractController
      */
     public function list(SerializerInterface $serializer, Request $request) : JsonResponse
     {
-        $response = new JsonResponse();
-        
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        $data = $serializer->serialize($products, 'json');
-
-        $response->setJson($data);
-
-        return $response;
+        $data = $serializer->serialize($products, 'json', SerializationContext::create()->setGroups(array('Default', 'list')));
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
 }
