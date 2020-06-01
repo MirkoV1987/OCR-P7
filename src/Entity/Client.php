@@ -4,31 +4,49 @@ namespace App\Entity;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Expose;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="clients")
  * 
  * @UniqueEntity("name")
+ * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * 
+ * @ExclusionPolicy("all")
+ * 
+ * @Hateoas\Relation(
+ *      "self",
+ *      href=@Hateoas\Route(
+ *          "client_show",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
  */
-class Client 
+class Client
 {
-    const ROLE_ADMIN = 'ROLE_ADMIN';
     /**
      * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Expose
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string", length=80, unique=true)
+     * @Expose
      */
     private $name;
 
@@ -51,6 +69,7 @@ class Client
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="client", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Expose
      */
     private $users;
 
