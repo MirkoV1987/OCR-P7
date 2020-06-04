@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Client;
 use DateTime;
 use App\Repository\UserRepository;
 use Swagger\Annotations as SWG;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Annotation\Groups;
@@ -26,47 +28,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class UserController extends AbstractController
 {
-    // /**
-    //  * Retrive User list related to a Client
-    //  * @Route("clients/{id}", name="details", methods={"GET"})
-    //  * @Groups({"users_list"})
-    //  * @SWG\Parameter(
-    //  *   name="id",
-    //  *   description="Id of the user to get",
-    //  *   in="path",
-    //  *   required=true,
-    //  *   type="integer"
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=200,
-    //  *     description="OK",
-    //  *     @SWG\Schema(
-    //  *         type="array",
-    //  *         @SWG\Items(ref=@Model(type=User::class))
-    //  *     )
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=401,
-    //  *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=404,
-    //  *     description="NOT FOUND"
-    //  * )
-    //  * @SWG\Tag(name="User")
-    //  * @param User $user
-    //  * @param SerializerInterface $serializer
-    //  * @return JsonResponse
-    //  */
-    // public function usersClientList(UserRepository $userRepo, SerializerInterface $serializer) : JsonResponse
-    // {
-    //     $usersClient = $serializer->serialize($userRepo->findBy(['client' => $this->getUser()]), 'json');
-
-    //     $data = $serializer->serialize($usersClient, 'json');
-        
-    //     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true, SerializationContext::create()->setGroups(array('Default', 'users_list')));
-    // }
-
     /**
      * Get details about a specific user
      * @Route("user/{id}", name="details", methods={"GET"})
@@ -112,6 +73,7 @@ class UserController extends AbstractController
     /**
      * User creation
      * @Route("users", name="create", methods={"POST"})
+     * 
      * @SWG\Parameter(
      *   name="User",
      *   description="Fields to provide to create an user",
@@ -157,8 +119,11 @@ class UserController extends AbstractController
             $data = $serializer->serialize($errors, 'json');
             return new JsonResponse($data, 400, [], true);
         }
+
+        $client = $this->getDoctrine()->getRepository(Client::class)->findOneBy(['id' => $user->getClient()]);
         $user->setDateAdd(new DateTime())
-            ->setClient($this->getUser());
+             ->setRoles(['ROLE_USER'])
+             ->setClient($client);
         
         $em->persist($user);
         $em->flush();
