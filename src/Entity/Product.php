@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
@@ -26,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          absolute = true,
  *     )
  * )
- *
+ * 
  */
 class Product 
 {
@@ -71,9 +72,10 @@ class Product
     public $dateAdd;
 
     /**
-     * @var string[] Describe the product
+     * @var json Describe the product
      * @ORM\Column(type="json", nullable = true)
      * @Groups({"details"})
+     * @Accessor(getter="getProperties", setter="setProperties")
      */
     public $properties;
 
@@ -138,26 +140,18 @@ class Product
         return $this;
     }
 
-    /**
-     * Get describe the product
-     *
-     * @return  string[]
-     */ 
     public function getProperties()
     {
-        return $this->properties;
+        //print_r(json_decode($this->properties)); exit;
+        return json_decode($this->properties, 1);
     }
 
     /**
-     * Set describe the product
-     *
-     * @param  string[]  $properties  Describe the product
-     *
      * @return  self
      */ 
-    public function setProperties(string $properties)
+    public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $this->properties = json_encode($properties);
 
         return $this;
     }
