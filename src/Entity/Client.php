@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Accessor;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +32,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          absolute = true
  *      )
  * )
+ * 
  * 
  */
 class Client
@@ -64,6 +66,7 @@ class Client
 
     /**
      * @ORM\Column(type="json", nullable=true)
+     * @Accessor(getter="getRoles", setter="setRoles")
      */
     private $roles = '';
 
@@ -121,7 +124,7 @@ class Client
 
     public function getRoles()
     {
-        return json_encode($this->roles);
+        return json_decode($this->roles);
     }
 
     /**
@@ -129,7 +132,7 @@ class Client
      */ 
     public function setRoles($roles)
     {
-        $this->roles = $roles;
+        $this->roles = json_encode($roles);
 
         return $this;
     }
