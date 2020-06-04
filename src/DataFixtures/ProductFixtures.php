@@ -22,7 +22,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Sony")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'2Go', 'Caméra':'15 megapixels', 'Options':'double SIM'}")
+                ->setProperties('{"Mémoire RAM": "2Go", "Caméra": "15 megapixels", "Options": "double SIM"}')
                 ->setPrice(289.89)
         ;
         $manager->persist($product);
@@ -32,7 +32,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Sony")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-3 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'50Mo', 'Caméra':'Non', 'Options':'radio FM'}")
+                ->setProperties('{"Mémoire RAM": "50Mo", "Caméra": "Non", "Options": "radio FM"}')
                 ->setPrice(44.99)
         ;
         $manager->persist($product);
@@ -42,7 +42,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Nokia")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-4 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'1.5Go', 'Caméra':'10 megapixels', 'Options':'double SIM'}")
+                ->setProperties('{"Mémoire RAM": "1.5Go", "Caméra": "10 megapixels", "Options": "double SIM"}')
                 ->setPrice(194.49)
         ;
         $manager->persist($product);
@@ -52,7 +52,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Samsung")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-6 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'1Go', 'Caméra':'10 megapixels', 'Options':'double SIM'}")
+                ->setProperties('{"Mémoire RAM": "1Go", "Caméra": "10 megapixels", "Options": "double SIM"}')
                 ->setPrice(289.89)
         ;
         $manager->persist($product);
@@ -62,7 +62,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("BlackBerry")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'3Go', 'Mémoire de stockage':'32Go', 'SO':'Android 5.1.1'}")
+                ->setProperties('{"Mémoire RAM": "3Go", "Mémoire de stockage": "32Go", "SO": "Android 5.1.1"}')
                 ->setPrice(259.99)
         ;
         $manager->persist($product);
@@ -72,7 +72,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("LG")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'6Go', 'Mémoire de stockage':'128Go', 'Options':'Dual SIM'}")
+                ->setProperties('{"Mémoire RAM": "6Go", "Mémoire de stockage": "128Go", "Options": "Dual SIM"}')
                 ->setPrice(484.90)
         ;
         $manager->persist($product);
@@ -82,7 +82,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Nokia")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-3 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'6Go', 'Caméra':'48 megapixels', 'Options':'Dual SIM'}")
+                ->setProperties('{"Mémoire RAM": "6Go", "Caméra": "48 megapixels", "Options": "Dual SIM"}')
                 ->setPrice(349.00)
         ;
         $manager->persist($product);
@@ -92,7 +92,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Huawei")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'6Go', 'Caméra':'50 megapixels', 'Réseau':'5G'}")
+                ->setProperties('{"Mémoire RAM": "6Go", "Caméra": "50 megapixels", "Réseau": "5G"}')
                 ->setPrice(949.00)
         ;
         $manager->persist($product);
@@ -102,7 +102,7 @@ class ProductFixtures extends Fixture
                 ->setBrand("Samsung")
                 ->setDescription("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.")
                 ->setDateAdd($faker->dateTimeBetween($startDate = "-2 months", $endDate = "now", $timezone = null))
-                ->setProperties("{'Mémoire RAM':'8Go', 'Caméra':'12 megapixels', 'Options':'Dual SIM'}")
+                ->setProperties('{"Mémoire RAM": "8Go", "Caméra": "12 megapixels", "Options": "Dual SIM"}')
                 ->setPrice(1242.00)
         ;
         $manager->persist($product);
