@@ -23,15 +23,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository") 
  * 
+ * @ExclusionPolicy("all")
  * 
- * @Hateoas\Relation(
- *      "self",
- *      href = @Hateoas\Route(
- *          "client_users_details",
- *          parameters = { "id" = "expr(object.getId())" },
- *          absolute = true,
- *      )
- * )
  * 
  * @Hateoas\Relation(
  *     "create",
@@ -40,6 +33,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *         absolute=true
  *     )
  * )
+ * 
+ * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "client_users_delete",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
+ * @Hateoas\Relation(
+ *      "self",
+ *      href=@Hateoas\Route(
+ *          "client_users_details",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
  * 
  * 
  * 
@@ -52,26 +64,30 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"list", "users_detail"})
+     * @Expose
+     * @Groups({"users_details"})
      *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=80, unique=true)
-     * @Groups({"list", "users_detail"})
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
-     * @Groups({"list", "users_detail"})
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=10)
-     * @Groups({"list", "users_detail"})
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $phone;
 
@@ -89,6 +105,7 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="users")
+     * @Expose
      */
     private $client;
 
