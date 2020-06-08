@@ -33,6 +33,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      )
  * )
  * 
+ * @Hateoas\Relation(
+ *     name = "users",
+ *     embedded = @Hateoas\Embedded(
+ *         "expr(object.getUsers())",
+ *     )
+ * )
+ * 
+ * 
  * 
  */
 class Client
@@ -42,13 +50,13 @@ class Client
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=80, unique=true)
      * @Expose
+     * @Groups({"show"})
      */
     private $name;
 
@@ -72,7 +80,6 @@ class Client
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="client", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @Expose
      */
     private $users;
 
