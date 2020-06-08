@@ -17,9 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
+use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
 
 /**
  * Class UserController
@@ -28,10 +29,52 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class UserController extends AbstractController
 {
+    // /**
+    //  * Get Users client list
+    //  * @Route("users/{id}", name="list", methods={"GET"})
+    //  * @SWG\Parameter(
+    //  *   name="id",
+    //  *   description="Id of the users client list to get",
+    //  *   in="path",
+    //  *   required=true,
+    //  *   type="integer"
+    //  * )
+    //  * @SWG\Response(
+    //  *     response=200,
+    //  *     description="OK",
+    //  *     @SWG\Schema(
+    //  *         type="array",
+    //  *         @SWG\Items(ref=@Model(type=User::class))
+    //  *     )
+    //  * )
+    //  * @SWG\Response(
+    //  *     response=401,
+    //  *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+    //  * )
+    //  * @SWG\Response(
+    //  *     response=403,
+    //  *     description="ACCESS DENIED"
+    //  * )
+    //  * @SWG\Response(
+    //  *     response=404,
+    //  *     description="NOT FOUND"
+    //  * )
+    //  * @SWG\Tag(name="User")
+    //  * @param User $user
+    //  * @param SerializerInterface $serializer
+    //  * @return JsonResponse
+    //  */
+    // public function usersClientList(User $userClient, SerializerInterface $serializer, UserRepository $userRepo) : JsonResponse
+    // {
+    //     $userClient = $serializer->serialize($userRepo->findBy(['client' => $this->getUser()]), 'json');
+    //     $data = $serializer->serialize($userClient, 'json');
+    //     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+    // }
+
     /**
      * Get details about a specific user
-     * @Route("user/{id}", name="details", methods={"GET"})
-     * @Groups({"users_detail"})
+     * @Route("users/{id}", name="details", methods={"GET"})
+     * @Groups({"users_details"})
      * @SWG\Parameter(
      *   name="id",
      *   description="Id of the user to get",
@@ -66,8 +109,8 @@ class UserController extends AbstractController
      */
     public function userDetail(User $user, SerializerInterface $serializer) : JsonResponse
     {
-        $data = $serializer->serialize($user, 'json');
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true, SerializationContext::create()->setGroups(array('users_detail')));
+        $data = $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('users_details')));
+        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
     /**
@@ -120,16 +163,57 @@ class UserController extends AbstractController
             return new JsonResponse($data, 400, [], true);
         }
 
-        $client = $this->getDoctrine()->getRepository(Client::class)->findOneBy(['id' => $user->getClient()]);
+        //$client = $this->getDoctrine()->getRepository(User::class)->findOneBy(['client' => $user->getClient()]);
         $user->setDateAdd(new DateTime())
              ->setRoles(['ROLE_USER'])
-             ->setClient($client);
+             ->setPassword('dsdd$%&');
+          //   ->setClient($client);
         
         $em->persist($user);
         $em->flush();
 
         $data = $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('Default')));
         return new JsonResponse($data, Response::HTTP_CREATED, [], true);
+    }
+
+    /**
+     * User deletion
+     * @Route("users/{id}", name="delete", methods={"DELETE"})
+     * @SWG\Parameter(
+     *   name="id",
+     *   description="Id of the user to delete",
+     *   in="path",
+     *   required=true,
+     *   type="integer"
+     * )
+     * @SWG\Response(
+     *     response=204,
+     *     description="NO CONTENT"
+     * )
+     * @SWG\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+     * )
+     * @SWG\Response(
+     *     response=403,
+     *     description="ACCESS DENIED"
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     * )
+     * @SWG\Tag(name="User")
+     * @nSecurity(name="Bearer")
+     * @Security("user === userC.getClient() || is_granted('ROLE_ADMIN')")
+     * @param User $user
+     * @param EntityManagerInterface $manager
+     * @return JsonResponse
+     */
+    public function delete(User $userC, EntityManagerInterface $em) : JsonResponse
+    {
+        $em->remove($userC);
+        $em->flush();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
 }
