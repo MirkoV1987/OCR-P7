@@ -15,7 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
+use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Class ProductController
@@ -62,6 +63,7 @@ class ClientController extends AbstractController
      */
     public function show(Client $client, SerializerInterface $serializer) : JsonResponse
     {
+        //$data = $serializer->serialize($client, 'json', SerializationContext::create()->setGroups(array('show')));
         $data = $serializer->serialize($client, 'json');
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
