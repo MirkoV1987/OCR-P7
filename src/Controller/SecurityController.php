@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Swagger\Annotations as SWG;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class SecurityController
 {
     /**
-     * @Route("/api/login_check", name="login", methods={"POST"})
+     * @Route("/api/login", name="login", methods={"POST"})
      * @SWG\Parameter(
      *   name="Login",
      *   description="Fields to provide to sign in and get a token",
@@ -46,8 +48,8 @@ class SecurityController
      */
     public function login() : JsonResponse
     {
-        // $client = $this->getClient();
+        $client = $this->getClient();
 
-        // return $this->json(array("email" => $client->getEmail(), 'roles' => $user->getRoles() ));
+        return $this->json(array("email" => $client->getEmail(), 'roles' => $client->getRoles() ));
     }
 }
