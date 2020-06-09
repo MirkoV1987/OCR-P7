@@ -32,9 +32,9 @@ class AppFixtures extends Fixture
 
         //---------Orange------------
         $client = new Client();
-        $client->setName('Orange');
+        $client->setUsername('Orange');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client1'));
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client1'));
         $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
@@ -42,9 +42,9 @@ class AppFixtures extends Fixture
 
         //--------Bouygues-----------
         $client = new Client();
-        $client->setName('Bouygues');
+        $client->setUsername('Bouygues');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client2'));
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client2'));
         $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
@@ -52,9 +52,9 @@ class AppFixtures extends Fixture
 
         //----------SFR--------------
         $client = new Client();
-        $client->setName('SFR');
+        $client->setUsername('SFR');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client3'));
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client3'));
         $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
