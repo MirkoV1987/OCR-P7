@@ -46,8 +46,8 @@ class SecurityController
      */
     public function login() : JsonResponse
     {
-        $user = $this->getUser();
+        // $client = $this->getClient();
 
-        return $this->json(array("username" => $user->getUsername(), 'roles' => $user->getRoles() ));
+        // return $this->json(array("email" => $client->getEmail(), 'roles' => $user->getRoles() ));
     }
 }

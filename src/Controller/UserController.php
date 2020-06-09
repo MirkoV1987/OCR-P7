@@ -60,6 +60,8 @@ class UserController extends AbstractController
     //  *     description="NOT FOUND"
     //  * )
     //  * @SWG\Tag(name="User")
+    //  * @nSecurity(name="Bearer")
+    //  * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
     //  * @param User $user
     //  * @param SerializerInterface $serializer
     //  * @return JsonResponse
@@ -103,6 +105,8 @@ class UserController extends AbstractController
      *     description="NOT FOUND"
      * )
      * @SWG\Tag(name="User")
+     * @nSecurity(name="Bearer")
+     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
      * @param User $user
      * @param SerializerInterface $serializer
      * @return JsonResponse
@@ -147,6 +151,8 @@ class UserController extends AbstractController
      *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
      * )
      * @SWG\Tag(name="User")
+     * @nSecurity(name="Bearer")
+     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param SerializerInterface $serializer
@@ -204,14 +210,14 @@ class UserController extends AbstractController
      * )
      * @SWG\Tag(name="User")
      * @nSecurity(name="Bearer")
-     * @Security("user === userC.getClient() || is_granted('ROLE_ADMIN')")
+     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
      * @param User $user
      * @param EntityManagerInterface $manager
      * @return JsonResponse
      */
-    public function delete(User $userC, EntityManagerInterface $em) : JsonResponse
+    public function delete(User $user, EntityManagerInterface $em) : JsonResponse
     {
-        $em->remove($userC);
+        $em->remove($user);
         $em->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

@@ -57,6 +57,8 @@ class ClientController extends AbstractController
      *     description="NOT FOUND"
      * )
      * @SWG\Tag(name="Client")
+     * @nSecurity(name="Bearer")
+     * @Security("user === client || is_granted('ROLE_ADMIN')")
      * @param Client $client
      * @param SerializerInterface $serializer
      * @return JsonResponse
