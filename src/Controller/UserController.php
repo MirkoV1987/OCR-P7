@@ -177,6 +177,6 @@ class UserController extends AbstractController
     {
         $em->remove($user);
         $em->flush();
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT, ['Utilisateur supprimé avec succès !']);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
