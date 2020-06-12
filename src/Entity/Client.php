@@ -43,7 +43,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * 
  */
-class Client
+class Client implements UserInterface
 {
     /**
      * @var int
@@ -58,7 +58,7 @@ class Client
      * @Expose
      * @Groups({"show"})
      */
-    private $name;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
@@ -88,14 +88,14 @@ class Client
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getUsername(): ?string
     {
-        return $this->name;
+        return $this->username;
     }
 
-    public function setName(string $name): self
+    public function setUsername(string $username): self
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
