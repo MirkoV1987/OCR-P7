@@ -4,8 +4,6 @@ security:
     encoders:
         App\Entity\Client:
             algorithm: argon2i
-        App\Entity\User:
-            algorithm: argon2i
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         app_user_provider:
@@ -24,23 +22,15 @@ security:
             anonymous: true
             json_login:
                 check_path: /api/login_check
-                # username_path: email
-                # password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         
         api:
             pattern:  ^/api
             stateless: true
-            # anonymous: false
-            # provider: app_user_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-        
-        main:
-            anonymous: true
-
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -52,7 +42,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/api, roles: ROLE_USER }
         # - { path: ^/api/admin, roles: ROLE_ADMIN }
         # - { path: ^/api, roles: ROLE_USER }
