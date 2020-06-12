@@ -52,10 +52,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      )
  * )
  * 
- * 
- * 
- * 
- * 
  */
 class User implements UserInterface
 {
@@ -74,6 +70,10 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=80, unique=true)
      * @Expose
      * @Groups({"users_details"})
+     * @Assert\Length(
+     *    min = 3,
+     *    max = 25
+     * )
      */
     private $username;
 

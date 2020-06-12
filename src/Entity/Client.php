@@ -54,11 +54,17 @@ class Client implements UserInterface
     private $id;
 
     /**
+     * @var $username 
+     * @Expose
+     */
+    private $username;
+
+    /**
      * @ORM\Column(type="string", length=80, unique=true)
      * @Expose
      * @Groups({"show"})
      */
-    private $username;
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
@@ -90,12 +96,24 @@ class Client implements UserInterface
 
     public function getUsername(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
