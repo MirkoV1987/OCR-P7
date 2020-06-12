@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserController
@@ -29,50 +30,6 @@ use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
  */
 class UserController extends AbstractController
 {
-    // /**
-    //  * Get Users client list
-    //  * @Route("users/{id}", name="list", methods={"GET"})
-    //  * @SWG\Parameter(
-    //  *   name="id",
-    //  *   description="Id of the users client list to get",
-    //  *   in="path",
-    //  *   required=true,
-    //  *   type="integer"
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=200,
-    //  *     description="OK",
-    //  *     @SWG\Schema(
-    //  *         type="array",
-    //  *         @SWG\Items(ref=@Model(type=User::class))
-    //  *     )
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=401,
-    //  *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=403,
-    //  *     description="ACCESS DENIED"
-    //  * )
-    //  * @SWG\Response(
-    //  *     response=404,
-    //  *     description="NOT FOUND"
-    //  * )
-    //  * @SWG\Tag(name="User")
-    //  * @nSecurity(name="Bearer")
-    //  * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
-    //  * @param User $user
-    //  * @param SerializerInterface $serializer
-    //  * @return JsonResponse
-    //  */
-    // public function usersClientList(User $userClient, SerializerInterface $serializer, UserRepository $userRepo) : JsonResponse
-    // {
-    //     $userClient = $serializer->serialize($userRepo->findBy(['client' => $this->getUser()]), 'json');
-    //     $data = $serializer->serialize($userClient, 'json');
-    //     return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
-    // }
-
     /**
      * Get details about a specific user
      * @Route("users/{id}", name="details", methods={"GET"})
@@ -106,7 +63,7 @@ class UserController extends AbstractController
      * )
      * @SWG\Tag(name="User")
      * @nSecurity(name="Bearer")
-     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
+     * @Security("user")
      * @param User $user
      * @param SerializerInterface $serializer
      * @return JsonResponse
@@ -152,7 +109,6 @@ class UserController extends AbstractController
      * )
      * @SWG\Tag(name="User")
      * @nSecurity(name="Bearer")
-     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param SerializerInterface $serializer
@@ -169,11 +125,13 @@ class UserController extends AbstractController
             return new JsonResponse($data, 400, [], true);
         }
 
-        //$client = $this->getDoctrine()->getRepository(User::class)->findOneBy(['client' => $user->getClient()]);
+        $password = $user->getPassword();
+        $hash = password_hash($password, PASSWORD_ARGON2I);
+
         $user->setDateAdd(new DateTime())
+             ->setClient($this->getUser())
              ->setRoles(['ROLE_USER'])
-             ->setPassword('dsdd$%&');
-          //   ->setClient($client);
+             ->setPassword($hash);
         
         $em->persist($user);
         $em->flush();
@@ -210,7 +168,7 @@ class UserController extends AbstractController
      * )
      * @SWG\Tag(name="User")
      * @nSecurity(name="Bearer")
-     * @Security("user === user.getClient() || is_granted('ROLE_ADMIN')")
+     * @Security("user")
      * @param User $user
      * @param EntityManagerInterface $manager
      * @return JsonResponse
@@ -219,7 +177,6 @@ class UserController extends AbstractController
     {
         $em->remove($user);
         $em->flush();
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT, ['Utilisateur supprimé avec succès !']);
     }
-
 }
