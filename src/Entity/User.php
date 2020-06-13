@@ -60,9 +60,6 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
-     * @Groups({"users_details"})
-     *
      */
     private $id;
 
