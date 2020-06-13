@@ -128,7 +128,7 @@ class UserController extends AbstractController
         $password = $user->getPassword();
         $hash = password_hash($password, PASSWORD_ARGON2I);
 
-        $user->setDateAdd(new DateTime())
+        $user->setDateAdd(new DateTime('+ 2 hour'))
              ->setClient($this->getUser())
              ->setRoles(['ROLE_USER'])
              ->setPassword($hash);
