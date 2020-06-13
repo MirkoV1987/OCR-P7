@@ -92,10 +92,17 @@ class ProductController extends AbstractController
      */
     public function list(SerializerInterface $serializer, Request $request) : JsonResponse
     {
-        $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
+        //Cache control
+        $response = new JsonResponse;
+        $response->setSharedMaxAge(3600);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
 
+        $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
         $data = $serializer->serialize($products, 'json', SerializationContext::create()->setGroups(array('Default', 'list')));
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+
+        $response->setJson($data, JsonResponse::HTTP_OK, [], true);
+
+        return $response;
     }
 
 }

@@ -65,8 +65,15 @@ class ClientController extends AbstractController
      */
     public function show(Client $client, SerializerInterface $serializer) : JsonResponse
     {
-        //$data = $serializer->serialize($client, 'json', SerializationContext::create()->setGroups(array('show')));
+        //Cache control
+        $response = new JsonResponse;
+        $response->setSharedMaxAge(3600);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        
         $data = $serializer->serialize($client, 'json');
-        return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
+
+        $response->setJson($data, JsonResponse::HTTP_OK, [], true);
+
+        return $response;
     }
 }
