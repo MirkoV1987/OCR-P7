@@ -9,7 +9,7 @@ class CacheKernel extends HttpCache
     protected function getOptions(): array
     {
         return [
-            'default_ttl' => 0,
+            'default_ttl' => 3600,
             // ...
         ];
     }
