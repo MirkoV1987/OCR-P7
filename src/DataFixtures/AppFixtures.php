@@ -34,8 +34,8 @@ class AppFixtures extends Fixture
         $client = new Client();
         $client->setName('Orange');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client1'));
-        $client->setRoles([Client::ROLE_ADMIN]);
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client1'));
+        $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
         $clients[] = $client;
@@ -44,8 +44,8 @@ class AppFixtures extends Fixture
         $client = new Client();
         $client->setName('Bouygues');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client2'));
-        $client->setRoles([Client::ROLE_ADMIN]);
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client2'));
+        $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
         $clients[] = $client;
@@ -54,8 +54,8 @@ class AppFixtures extends Fixture
         $client = new Client();
         $client->setName('SFR');
         $client->setEmail($faker->safeEmail);
-        $client->setPassword(md5('client3'));
-        $client->setRoles([Client::ROLE_ADMIN]);
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client3'));
+        $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
         $clients[] = $client;
@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
             $user->setPhone($faker->randomNumber($nbDigits = 6, $strict = true));
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'test'));
             $user->setClient($faker->randomElement($clients));
-            $user->setRoles([User::ROLE_USER]);
+            $user->setRoles(['ROLE_USER']);
             $user->setDateAdd($faker->dateTimeBetween($startDate = '-8 months', $endDate = 'now', $timezone = null));
 
             $manager->persist($user);

@@ -4,21 +4,47 @@ namespace App\Entity;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Accessor;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="clients")
  * 
  * @UniqueEntity("name")
+ * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * 
+ * @ExclusionPolicy("all")
+ * 
+ * @Hateoas\Relation(
+ *      "self",
+ *      href=@Hateoas\Route(
+ *          "client_show",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
+ * @Hateoas\Relation(
+ *     name = "users",
+ *     embedded = @Hateoas\Embedded(
+ *         "expr(object.getUsers())",
+ *     )
+ * )
+ * 
+ * 
+ * 
  */
-class Client 
+class Client implements UserInterface
 {
-    const ROLE_ADMIN = 'ROLE_ADMIN';
     /**
      * @var int
      * @ORM\Id()
@@ -28,7 +54,15 @@ class Client
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @var $username 
+     * @Expose
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="string", length=80, unique=true)
+     * @Expose
+     * @Groups({"show"})
      */
     private $name;
 
@@ -46,6 +80,7 @@ class Client
 
     /**
      * @ORM\Column(type="json", nullable=true)
+     * @Accessor(getter="getRoles", setter="setRoles")
      */
     private $roles = '';
 
@@ -57,6 +92,18 @@ class Client
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -102,7 +149,7 @@ class Client
 
     public function getRoles()
     {
-        return json_encode($this->roles);
+        return json_decode($this->roles);
     }
 
     /**
@@ -110,7 +157,7 @@ class Client
      */ 
     public function setRoles($roles)
     {
-        $this->roles = $roles;
+        $this->roles = json_encode($roles);
 
         return $this;
     }

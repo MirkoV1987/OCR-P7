@@ -4,7 +4,13 @@ namespace App\Entity;
 
 use App\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 use Symfony\Component\Validator\Constraints as Assert;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -13,34 +19,72 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Table(name="users")
  * 
+ * @UniqueEntity("username")
  * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository") 
+ * 
+ * @ExclusionPolicy("all")
+ * 
+ * 
+ * @Hateoas\Relation(
+ *     "create",
+ *     href=@Hateoas\Route(
+ *         "client_users_create",
+ *         absolute=true
+ *     )
+ * )
+ * 
+ * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "client_users_delete",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
+ * @Hateoas\Relation(
+ *      "self",
+ *      href=@Hateoas\Route(
+ *          "client_users_details",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
  */
 class User implements UserInterface
 {
-    //const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_USER = 'ROLE_USER';
     /**
      * @var int
      * @ORM\Column(type="integer")
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string", length=80, unique=true)
+     * @Expose
+     * @Groups({"users_details"})
+     * @Assert\Length(
+     *    min = 3,
+     *    max = 25
+     * )
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $phone;
 
@@ -52,11 +96,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json", nullable=true)
+     * @Accessor(getter="getRoles", setter="setRoles")
      */
     private $roles = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="users")
+     * @Expose
      */
     private $client;
 
@@ -64,6 +110,8 @@ class User implements UserInterface
      * @Assert\Date
      * @var string A "Y-m-d H:i:s" formatted value
      * @ORM\Column(type="datetime", nullable = true)
+     * @Expose
+     * @Groups({"users_details"})
      */
     private $dateAdd;
 
@@ -127,7 +175,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return json_encode($this->roles);
+        return json_decode($this->roles);
     }
 
     /**
@@ -135,7 +183,7 @@ class User implements UserInterface
      */ 
     public function setRoles($roles)
     {
-        $this->roles = $roles;
+        $this->roles = json_encode($roles);
 
         return $this;
     }

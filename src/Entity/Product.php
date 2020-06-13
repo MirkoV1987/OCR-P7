@@ -3,30 +3,31 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="products")
  * 
- * @ExclusionPolicy("all")
  * @UniqueEntity(fields={"name"}, message="Ce produit existe déjà !") 
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * 
  * @Hateoas\Relation(
  *     "self",
- *     href = @Hateoas\Route(
- *         "product_show",
- *         parameters = { "id" = "expr(object.getId())" },
- *         absolute = true,
+ *     href=@Hateoas\Route(
+ *          "product_show",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true,
  *     )
  * )
- *
+ * 
  */
 class Product 
 {
@@ -34,55 +35,54 @@ class Product
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @ORM\Id()
-     * 
+     * @Groups({"details"})
      */
     private $id;
 
     /**
-     * @Expose
      * @ORM\Column(type="string", length=125)
      * @Assert\NotBlank
+     * @Groups({"list", "details"})
      * 
      */
     private $name;
 
     /**
-     * @Expose
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
+     * @Groups({"list", "details"})
      * 
      */
     private $brand;
 
     /**
-     * @Expose
      * @ORM\Column(type="text")
      * @Assert\NotBlank 
-     * 
+     * @Groups({"details"})
      */
     private $description;
 
     /**
-     * @Expose
      * @Assert\Date
      * @var string A "Y-m-d H:i:s" formatted value
      * @ORM\Column(type="datetime", nullable = true)
+     * @Groups({"details"})
      * 
      */
     public $dateAdd;
 
     /**
-     * @var string[] Describe the product
-     * @Expose
+     * @var json Describe the product
      * @ORM\Column(type="json", nullable = true)
-     * 
+     * @Groups({"details"})
+     * @Accessor(getter="getProperties", setter="setProperties")
      */
     public $properties;
 
     /**
-     * @Expose
      * @ORM\Column(type="decimal", precision=65, scale=2)
      * @Assert\NotBlank
+     * @Groups({"list", "details"})
      */
     private $price;
 
@@ -128,16 +128,6 @@ class Product
         return $this;
     }
 
-    /**
-     * Get describe the product
-     *
-     * @return  string[]
-     */ 
-    public function getProperties()
-    {
-        return $this->properties;
-    }
-
     public function getDateAdd(): ?\DateTimeInterface
     {
         return $this->dateAdd;
@@ -150,16 +140,18 @@ class Product
         return $this;
     }
 
+    public function getProperties()
+    {
+        //print_r(json_decode($this->properties)); exit;
+        return json_decode($this->properties, 1);
+    }
+
     /**
-     * Set describe the product
-     *
-     * @param  string[]  $properties  Describe the product
-     *
      * @return  self
      */ 
-    public function setProperties(string $properties)
+    public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $this->properties = json_encode($properties);
 
         return $this;
     }
