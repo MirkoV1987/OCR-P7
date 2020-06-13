@@ -26,7 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class ClientController extends AbstractController
 {
     /**
-     * Get details about a specific user
+     * GET Users of a specific Client
      * @Route("clients/{id}", name="show", methods={"GET"})
      * @Groups({"show"})
      * @SWG\Parameter(

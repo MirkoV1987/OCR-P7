@@ -7,7 +7,6 @@ use App\Entity\Client;
 use DateTime;
 use App\Repository\UserRepository;
 use Swagger\Annotations as SWG;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Annotation\Groups;
@@ -31,7 +30,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * Get details about a specific user
+     * GET Details about a specific User
      * @Route("users/{id}", name="details", methods={"GET"})
      * @Groups({"users_details"})
      * @SWG\Parameter(
@@ -75,7 +74,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * User creation
+     * POST - Create User
      * @Route("users", name="create", methods={"POST"})
      * 
      * @SWG\Parameter(
@@ -88,7 +87,9 @@ class UserController extends AbstractController
      *     type="object",
      *     title="User field",
      *     @SWG\Property(property="username", type="string"),
-     *     @SWG\Property(property="email", type="string")
+     *     @SWG\Property(property="email", type="string"),
+     *     @SWG\Property(property="phone", type="string"),
+     *     @SWG\Property(property="password", type="string")
      *     )
      * )
      * @SWG\Response(
@@ -141,7 +142,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * User deletion
+     * DELETE - Remove User
      * @Route("users/{id}", name="delete", methods={"DELETE"})
      * @SWG\Parameter(
      *   name="id",

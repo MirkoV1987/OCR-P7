@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductController extends AbstractController
 {
     /**
-     * Get details about a specific Product
+     * GET Details about a specific Product
      * @Route("products/{id}", name="show", methods={"GET"})
      * @Groups({"details"})
      * @SWG\Parameter(
@@ -63,7 +63,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * Get products list
+     * GET Products List
      * @Route("products", name="list", methods={"GET"})
      * @Groups({"list"})
      * @SWG\Parameter(
