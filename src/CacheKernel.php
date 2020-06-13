@@ -6,4 +6,11 @@ use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 
 class CacheKernel extends HttpCache
 {
+    protected function getOptions(): array
+    {
+        return [
+            'default_ttl' => 0,
+            // ...
+        ];
+    }
 }
