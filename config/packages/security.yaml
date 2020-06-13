@@ -4,6 +4,8 @@ security:
     encoders:
         App\Entity\Client:
             algorithm: argon2i
+        App\Entity\User:
+            algorithm: argon2i
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         app_user_provider:
