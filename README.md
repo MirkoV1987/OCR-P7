@@ -84,6 +84,6 @@ Projet 7 de mon parcours de Développeur d'applications - PHP/SYMFONY chez OpenC
     Lien d'accès : api/doc.json
 </br>
 <li>La documentation au format .doc est disponible également au lien suivant :</li></br>
-<li><a href="https://docs.google.com/document/d/e/2PACX-1vSOs8dqK1kCZbIdIXoOmpMFlEFMuyLe4UhXIhm0weshPon2HFZ-l1t6aHXNpxe_eUK8L5civno3213I/pub" target="_blank"></a>ApiBilemo Doc</li>
+<li><a href="https://docs.google.com/document/d/e/2PACX-1vSOs8dqK1kCZbIdIXoOmpMFlEFMuyLe4UhXIhm0weshPon2HFZ-l1t6aHXNpxe_eUK8L5civno3213I/pub" target="_blank">ApiBilemo Doc</a></li>
 </br>
 <li>Félicitations ! Vous pouvez vous servir de ce projet à votre guise !</li>
