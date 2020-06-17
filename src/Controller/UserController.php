@@ -205,7 +205,7 @@ class UserController extends AbstractController
     public function update(User $user, Request $request, EntityManagerInterface $em, FormErrors $formErrors, SerializerInterface $serializer) : JsonResponse
     {
         $data = json_decode($request->getContent(), 'json');
-        // Use symfony/forms for update @see https://github.com/schmittjoh/JMSSerializerBundle/issues/575#issuecomment-303058694
+
         $form = $this->createForm(UserType::class, $user);
         $form->submit($data);
         if($form->isSubmitted() && !$form->isValid()) {
