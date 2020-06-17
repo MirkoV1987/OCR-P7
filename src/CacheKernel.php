@@ -10,7 +10,6 @@ class CacheKernel extends HttpCache
     {
         return [
             'default_ttl' => 3600,
-            // ...
         ];
     }
 }

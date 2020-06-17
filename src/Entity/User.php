@@ -35,6 +35,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * )
  * 
  * @Hateoas\Relation(
+ *      "update",
+ *      href = @Hateoas\Route(
+ *          "client_users_update",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
+ * @Hateoas\Relation(
  *      "delete",
  *      href = @Hateoas\Route(
  *          "client_users_delete",
