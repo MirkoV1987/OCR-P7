@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Client;
 use DateTime;
+use App\Form\UserType;
+use App\Service\FormErrors;
 use App\Repository\UserRepository;
 use Swagger\Annotations as SWG;
 use JMS\Serializer\SerializerInterface;
@@ -111,7 +113,7 @@ class UserController extends AbstractController
      * @SWG\Tag(name="User")
      * @nSecurity(name="Bearer")
      * @param Request $request
-     * @param EntityManagerInterface $manager
+     * @param EntityManagerInterface $em
      * @param SerializerInterface $serializer
      * @param ValidatorInterface $validator
      * @return JsonResponse
@@ -139,6 +141,87 @@ class UserController extends AbstractController
 
         $data = $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('Default')));
         return new JsonResponse($data, Response::HTTP_CREATED, [], true);
+    }
+
+    /**
+     * PUT - Update User
+     * @Route("users/{id}", name="update", methods={"PUT"})
+     * @SWG\Parameter(
+     *   name="id",
+     *   description="Id of the user to update",
+     *   in="path",
+     *   required=true,
+     *   type="integer"
+     * )
+     * @SWG\Parameter(
+     *   name="User",
+     *   description="Fields to provide to update an user",
+     *   in="body",
+     *   required=true,
+     *   type="string",
+     *   @SWG\Schema(
+     *     type="object",
+     *     title="User field",
+     *     @SWG\Property(property="username", type="string"),
+     *     @SWG\Property(property="email", type="string"),
+     *     @SWG\Property(property="phone", type="string"),
+     *     @SWG\Property(property="password", type="string") 
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=200,
+     *     description="OK",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=User::class))
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     * )
+     * @SWG\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+     * )
+     * @SWG\Response(
+     *     response=403,
+     *     description="ACCESS DENIED"
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     * )
+     * @SWG\Tag(name="User")
+     * @nSecurity(name="Bearer")
+     * @param User $user
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param FormErrors $formErrors
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function update(User $user, Request $request, EntityManagerInterface $em, FormErrors $formErrors, SerializerInterface $serializer) : JsonResponse
+    {
+        $data = json_decode($request->getContent(), 'json');
+        // Use symfony/forms for update @see https://github.com/schmittjoh/JMSSerializerBundle/issues/575#issuecomment-303058694
+        $form = $this->createForm(UserType::class, $user);
+        $form->submit($data);
+        if($form->isSubmitted() && !$form->isValid()) {
+            $errors = $formErrors->getErrors($form);
+            return new JsonResponse($errors, 400, [], false);
+        }
+
+        $password = $user->getPassword();
+        $hash = password_hash($password, PASSWORD_ARGON2I);
+
+        $user->setDateAdd(new DateTime('+ 2 hour'));
+        $user->setPassword($hash);
+        $user->setPhone($user->getPhone());
+        $em->flush();
+        $data = $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('Default')));
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
