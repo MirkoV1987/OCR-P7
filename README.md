@@ -77,6 +77,15 @@ Projet 7 de mon parcours de Développeur d'applications - PHP/SYMFONY chez OpenC
         "password" : "Client1"
     }
 </br>
+<li>Un compte de type Admin est également disponible.</li></br>
+<li>Pour l'utiliser, générez le Bearer token en insérant les données suivantes dans le <em>Body</em> :</li>
+</br>
+
+    {
+        "username" : "admin1@gmail.com",
+        "password" : "Admin1"
+    }
+</br>
 <b>DOCUMENTATION</b>
 <li>La documentation au format JSON est disponible au lien suivant :</li></br>
 </br>
