@@ -40,6 +40,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     )
  * )
  * 
+ * @Hateoas\Relation(
+ *      "client",
+ *      href=@Hateoas\Route(
+ *          "client_list",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * 
  * 
  * 
  */
@@ -50,6 +59,7 @@ class Client implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Expose
      */
     private $id;
 

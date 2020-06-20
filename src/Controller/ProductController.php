@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Service\Pagination;
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Annotation\Groups;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Nelmio\ApiDocBundle\Annotation\Security as nSecurity;
 
 /**
  * Class ProductController
@@ -87,22 +87,32 @@ class ProductController extends AbstractController
      * @SWG\Tag(name="Product")
      * @param SerializerInterface $serializer
      * @param Request $request
+     * @param Pagination $pagination
      * @return JsonResponse
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function list(SerializerInterface $serializer, Request $request) : JsonResponse
+    public function list(SerializerInterface $serializer, Pagination $pagination, Request $request) : JsonResponse
     {
         //Cache control
         $response = new JsonResponse;
         $response->setSharedMaxAge(3600);
         $response->headers->addCacheControlDirective('must-revalidate', true);
 
-        $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
-        $data = $serializer->serialize($products, 'json', SerializationContext::create()->setGroups(array('Default', 'list')));
+        $limit = $request->query->get('limit', $this->getParameter('default_product_limit'));
+        $page = $request->query->get('page', 1);
+        $route = $request->attributes->get('_route');
+        $criteria = !empty($request->query->get('name')) ? ['name' => $request->query->get('name')] : [];
+
+        $pagination->setEntityClass(Product::class)->setRoute($route);
+        $pagination->setCurrentPage($page)->setLimit($limit);
+        $pagination->setCriteria($criteria);
+
+        $paginated = $pagination->getData();
+        $data = $serializer->serialize($paginated, 'json', SerializationContext::create()->setGroups(array('Default', 'list')));
 
         $response->setJson($data, JsonResponse::HTTP_OK, [], true);
 
         return $response;
     }
-
 }
+        

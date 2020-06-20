@@ -1,332 +1,581 @@
-swagger: '2.0'
-info:
-  title: Bilemo Api Documentation
-  description: 'This API provides a catalog of products for our clients, and the possibility to manage their users.'
-  version: 1.0.0
-paths:
-  /doc.json:
-    get:
-      summary: Bilemo Api Documentation formated in JSON
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: OK
-      tags:
-        - Documentation
-  /doc:
-    get:
-      summary: Bilemo Api Documentation
-      produces:
-        - text/html
-      responses:
-        '200':
-          description: OK
-      tags:
-        - Documentation
-  '/api/clients/{id}':
-    get:
-      summary: GET Users of a specific Client
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Id of the users list to get
-          type: integer
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/Client'
-            type: array
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-        '403':
-          description: ACCESS DENIED
-        '404':
-          description: NOT FOUND
-      tags:
-        - Client
-      security:
-        - Bearer: []
-  '/api/products/{id}':
-    get:
-      summary: GET Details about a specific Product
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Id of the product to get
-          type: integer
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/Product'
-            type: array
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-        '404':
-          description: NOT FOUND
-      tags:
-        - Product
-  /api/products:
-    get:
-      summary: GET Products List
-      parameters:
-        - name: name
-          in: query
-          description: The mobile name to search
-          type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/Product'
-            type: array
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-      tags:
-        - Product
-  '/api/users/{id}':
-    get:
-      summary: GET Details about a specific User
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Id of the user to get
-          type: integer
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/User'
-            type: array
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-        '403':
-          description: ACCESS DENIED
-        '404':
-          description: NOT FOUND
-      tags:
-        - User
-      security:
-        - Bearer: []
-    put:
-      summary: PUT - Update User
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Id of the user to update
-          type: integer
-        - name: User
-          in: body
-          required: true
-          description: Fields to provide to update an user
-          schema:
-            title: User field
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-              phone:
-                type: string
-              password:
-                type: string
-            type: object
-          type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/User'
-            type: array
-        '400':
-          description: BAD REQUEST
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-        '403':
-          description: ACCESS DENIED
-        '404':
-          description: NOT FOUND
-      tags:
-        - User
-      security:
-        - Bearer: []
-    delete:
-      summary: DELETE - Remove User
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Id of the user to delete
-          type: integer
-      responses:
-        '204':
-          description: NO CONTENT
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-        '403':
-          description: ACCESS DENIED
-        '404':
-          description: NOT FOUND
-      tags:
-        - User
-      security:
-        - Bearer: []
-  /api/users:
-    post:
-      summary: POST - Create User
-      parameters:
-        - name: User
-          in: body
-          required: true
-          description: Fields to provide to create an user
-          schema:
-            title: User field
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-              phone:
-                type: string
-              password:
-                type: string
-            type: object
-          type: string
-      responses:
-        '201':
-          description: CREATED
-          schema:
-            items:
-              $ref: '#/definitions/User'
-            type: array
-        '400':
-          description: BAD REQUEST
-        '401':
-          description: UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token
-      tags:
-        - User
-      security:
-        - Bearer: []
-  /api/doc.json:
-    get:
-      responses:
-        default:
-          description: ''
-definitions:
-  Client:
-    properties:
-      name:
-        type: string
-      _links:
-        readOnly: true
-        properties:
-          self:
-            properties:
-              href:
-                type: string
-            type: object
-      _embedded:
-        readOnly: true
-        properties:
-          users:
-            type: object
-    type: object
-  Product:
-    required:
-      - name
-      - brand
-      - description
-      - price
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      brand:
-        type: string
-      description:
-        type: string
-      date_add:
-        title: 'A "Y-m-d H:i:s" formatted value'
-        type: string
-        format: date-time
-      price:
-        type: number
-        format: float
-      _links:
-        readOnly: true
-        properties:
-          self:
-            properties:
-              href:
-                type: string
-            type: object
-    type: object
-  User:
-    properties:
-      username:
-        type: string
-        maxLength: 25
-        minLength: 3
-      email:
-        type: string
-      phone:
-        type: string
-      client:
-        $ref: '#/definitions/Client'
-      date_add:
-        title: 'A "Y-m-d H:i:s" formatted value'
-        type: string
-        format: date-time
-      _links:
-        readOnly: true
-        properties:
-          create:
-            properties:
-              href:
-                type: string
-            type: object
-          update:
-            properties:
-              href:
-                type: string
-            type: object
-          delete:
-            properties:
-              href:
-                type: string
-            type: object
-          self:
-            properties:
-              href:
-                type: string
-            type: object
-    type: object
-tags:
-  - name: Authentication
-    description: Authenticate to get a token
-  - name: Product
-    description: 'Get details and list of mobile for clients, manage the mobile catalog for Bilemo'
-  - name: Client
-    description: 'Get details about their own account and manage it for client, retrieve Users related to Client'
-  - name: User
-    description: 'Get details and list of user for clients, manage their own, manage all users for Bilemo'
-securityDefinitions:
-  Bearer:
-    name: Authorization
-    type: apiKey
-    in: header
-    description: 'Value: Bearer {jwt} | (Authenticate to get a token)'
-basePath: /public
-host: api.bilemo
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Bilemo Api Documentation",
+        "description": "This API provides a catalog of products for our clients, and the possibility to manage their users.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/doc.json": {
+            "get": {
+                "summary": "Bilemo Api Documentation formated in JSON",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "Documentation"
+                ]
+            }
+        },
+        "/doc": {
+            "get": {
+                "summary": "Bilemo Api Documentation",
+                "produces": [
+                    "text/html"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "Documentation"
+                ]
+            }
+        },
+        "/api/clients/{id}": {
+            "get": {
+                "summary": "GET Users of a specific Client",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the users list to get",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Client"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "403": {
+                        "description": "ACCESS DENIED"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "Client"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/clients": {
+            "get": {
+                "summary": "ADMIN ONLY - GET Clients List",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The page number to show",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The number of client per page",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Client"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "403": {
+                        "description": "ACCESS DENIED"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "Client"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "summary": "GET Details about a specific Product",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the product to get",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Product"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "Product"
+                ]
+            }
+        },
+        "/api/products": {
+            "get": {
+                "summary": "GET Products List",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The mobile name to search",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Product"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    }
+                },
+                "tags": [
+                    "Product"
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "summary": "GET Details about a specific User",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the user to get",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "403": {
+                        "description": "ACCESS DENIED"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "summary": "PUT - Update User",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the user to update",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "description": "Fields to provide to update an user",
+                        "schema": {
+                            "title": "User field",
+                            "properties": {
+                                "username": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST"
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "403": {
+                        "description": "ACCESS DENIED"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "DELETE - Remove User",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the user to delete",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "NO CONTENT"
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    },
+                    "403": {
+                        "description": "ACCESS DENIED"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                },
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "post": {
+                "summary": "POST - Create User",
+                "parameters": [
+                    {
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "description": "Fields to provide to create an user",
+                        "schema": {
+                            "title": "User field",
+                            "properties": {
+                                "username": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "CREATED",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST"
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED - JWT Token not found | Expired JWT Token | Invalid JWT Token"
+                    }
+                },
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/doc.json": {
+            "get": {
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Client": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "_links": {
+                    "readOnly": true,
+                    "properties": {
+                        "self": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "client": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "_embedded": {
+                    "readOnly": true,
+                    "properties": {
+                        "users": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "Product": {
+            "required": [
+                "name",
+                "brand",
+                "description",
+                "price"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "brand": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "date_add": {
+                    "title": "A \"Y-m-d H:i:s\" formatted value",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "_links": {
+                    "readOnly": true,
+                    "properties": {
+                        "self": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "User": {
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "minLength": 3
+                },
+                "email": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "client": {
+                    "$ref": "#/definitions/Client"
+                },
+                "date_add": {
+                    "title": "A \"Y-m-d H:i:s\" formatted value",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "_links": {
+                    "readOnly": true,
+                    "properties": {
+                        "create": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "update": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "delete": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "self": {
+                            "properties": {
+                                "href": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "type": "object"
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authenticate to get a token"
+        },
+        {
+            "name": "Product",
+            "description": "Get details and list of mobile for clients, manage the mobile catalog for Bilemo"
+        },
+        {
+            "name": "Client",
+            "description": "Get details about their own account and manage it for client, retrieve Users related to Client"
+        },
+        {
+            "name": "User",
+            "description": "Get details and list of user for clients, manage their own, manage all users for Bilemo"
+        }
+    ],
+    "securityDefinitions": {
+        "Bearer": {
+            "name": "Authorization",
+            "type": "apiKey",
+            "in": "header",
+            "description": "Value: Bearer {jwt} | (Authenticate to get a token)"
+        }
+    },
+    "basePath": "/public",
+    "host": "api.bilemo"
+}
