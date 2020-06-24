@@ -69,7 +69,7 @@ class Product
      * @Groups({"details"})
      * 
      */
-    public $dateAdd;
+    private $dateAdd;
 
     /**
      * @var json Describe the product
@@ -77,7 +77,7 @@ class Product
      * @Groups({"details"})
      * @Accessor(getter="getProperties", setter="setProperties")
      */
-    public $properties;
+    private $properties;
 
     /**
      * @ORM\Column(type="decimal", precision=65, scale=2)

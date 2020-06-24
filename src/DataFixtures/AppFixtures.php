@@ -33,9 +33,9 @@ class AppFixtures extends Fixture
         //---------Orange------------
         $client = new Client();
         $client->setName('Orange');
-        $client->setEmail($faker->safeEmail);
+        $client->setEmail('client1@gmail.com');
         $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client1'));
-        $client->setRoles(['ROLE_ADMIN']);
+        $client->setRoles(['ROLE_USER']);
 
         $manager->persist($client);
         $clients[] = $client;
@@ -43,9 +43,9 @@ class AppFixtures extends Fixture
         //--------Bouygues-----------
         $client = new Client();
         $client->setName('Bouygues');
-        $client->setEmail($faker->safeEmail);
+        $client->setEmail('client2@gmail.com');
         $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client2'));
-        $client->setRoles(['ROLE_ADMIN']);
+        $client->setRoles(['ROLE_USER']);
 
         $manager->persist($client);
         $clients[] = $client;
@@ -53,8 +53,18 @@ class AppFixtures extends Fixture
         //----------SFR--------------
         $client = new Client();
         $client->setName('SFR');
-        $client->setEmail($faker->safeEmail);
+        $client->setEmail('client3@gmail.com');
         $client->setPassword($this->passwordEncoder->encodePassword($client, 'Client3'));
+        $client->setRoles(['ROLE_USER']);
+
+        $manager->persist($client);
+        $clients[] = $client;
+
+        //--------Admin--------------
+        $client = new Client();
+        $client->setName('Bilemo');
+        $client->setEmail('admin1@gmail.com');
+        $client->setPassword($this->passwordEncoder->encodePassword($client, 'Admin1'));
         $client->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($client);
